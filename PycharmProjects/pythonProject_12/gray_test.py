@@ -15,7 +15,7 @@ def test_dummy(fxt_test_1):
 
 @pytest.mark.parametrize("x, y, expected_value",
                          [(1, 2, 3),
-                          (2, 4, 7)]
+                          (2, 4, 6)]
                          )
 def test_dummy_param(x, y, expected_value, fxt_test_1):
     print
@@ -33,6 +33,7 @@ def test_known_bug():
     result = 1 / 0
     assert 1 + 1 == 2
 
+#@pytest.Class()
 def test_divide_by_zero():
     # Using pytest.raises to check for the ValueError exception
     with pytest.raises(ValueError) as excinfo:
