@@ -1,0 +1,37 @@
+                          Start
+                            |
+                   Create account with free plan, receive API_KEY?
+                  /              \
+            Yes                    No
+           /                         \
+Is API_KEY correct?              Access Denied
+       /        \
+     Yes        No
+    /              \
+Access Granted   Access Denied
+       /
+Is LATEST endpoint access provided
+      /                        \
+JSON response as expected      Access denied
+      /
+Is HISTORICAL endpoint access provided
+      /                        \
+JSON response as expected      Access denied
+      /
+Is CONVERT endpoint access provided
+      /                        \
+Acess denied for free plan    Access denied
+JSON response as expected      JSON reponse is incorrect
+          /
+Is TIME-SERIES endpoint access provided
+      /                        \
+Acess denied for free plan    Access denied
+JSON response as expected      JSON reponse is incorrect
+    /
+Is FLUCTUATION endpoint access provided
+      /                        \
+Acess denied for free plan    Access denied
+JSON response as expected      JSON reponse is incorrect
+
+
+
