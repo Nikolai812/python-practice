@@ -1,5 +1,5 @@
 #import pytest
-from MyFileReader import MyFileReader
+from my_file_reader import MyFileReader
 import argparse
 
 
