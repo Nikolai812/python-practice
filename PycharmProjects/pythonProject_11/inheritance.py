@@ -1,26 +1,29 @@
 #import pytest
+import threading
+import time
+
 from my_file_reader import MyFileReader
 import argparse
 
 
-# Fixture without yield
-def list_fiddling(l):
-    l2 = l
-    l3 = list(l)
-    l2.pop()
+class A:
+    def show(self):
+        print("This is A")
 
-    print('l=' + str(l))
-    print('l2=' + str(l2))
-    print('l3=' + str(l3))
 
-    sl3 = sorted(l3)
-    print('sl3=' + str(sl3))
+class B(A):
+    def show(self):
+        print("This is B")
 
-    m = l3.sort()
-    print('after sort() l3=' + str(l3))
-    print('m=' + str(m))
 
-    print('type of l3:' + str(type(l3)))
+class C(A):
+    def show(self):
+        print("This is C")
+
+
+class D(B, C):
+    def show2(self):
+        print("This is D")
 
 
 if __name__ == '__main__':
@@ -32,11 +35,11 @@ if __name__ == '__main__':
                         help="Order Id",
                         default="81b0314a-9e90-4657-bed6-b00aa3468007")
 
-    args = parser.parse_args()
+    #args = parser.parse_args()
 
-    #mylist = [3, 1, 4, 87, 12, 6, 5]
-    #list_fiddling(mylist)
-    mfr = MyFileReader()
-    mfr.read_csv('bla.csv')
+    d = D()
+    d.show()
+
+    print(D.mro())
 
 

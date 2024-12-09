@@ -41,21 +41,9 @@ if __name__ == '__main__':
     print(list1)
     print(list2)
 
-    zipped3 = zip(list1, list2, list3)
-    zipped2 = zip(list1, list2)
-    output_list = [value for pair in zipped2 for value in pair]
-    output_list2 = [pair for pair in zipped3]
+    zipped = zip(list1, list2, list3)
 
-    
-    lz3 = list(zipped3)
-    l3 = len(lz3)
-
-    lz2 = list(zipped2)
-    print(lz2)
-
-    r = range(3)
-    lr = len(r)
-
-
+    output_list = [value for pair in zip(list1, list2) for value in pair]
+    output_list2 = [value for pair in zipped for value in pair]
     print(output_list)
     print(output_list2)
