@@ -1,0 +1,5 @@
+# Ignore all `.рус` files
+*.рус
+
+# Ignore all `.iml` files
+*.iml

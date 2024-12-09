@@ -20,3 +20,18 @@ def setup_fixture_with_yield():
 def test_function_with_yield(setup_fixture_with_yield):
     print("Test function (with yield)")
     assert setup_fixture_with_yield == "fixture_value"
+
+
+# Function to be tested
+def add(x, y):
+    return x + y
+
+# Parametrize the test function with different sets of arguments
+@pytest.mark.parametrize("x, y, expected", [
+    (1, 2, 3),
+    (4, 5, 9),
+    (-1, 1, 0),
+    (0, 0, 0)
+])
+def test_add(x, y, expected):
+    assert add(x, y) == expected
