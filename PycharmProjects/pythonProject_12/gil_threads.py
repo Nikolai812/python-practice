@@ -1,6 +1,7 @@
 #import pytest
 import threading
 import time
+import datetime
 
 from my_file_reader import MyFileReader
 import argparse
@@ -42,4 +43,9 @@ if __name__ == '__main__':
     th1.join()
     th2.join()
 
+    now = datetime.datetime.now()
+    print()
+    print("#########################################")
+    print(now)
     print("Both tasks are done")
+    print("#########################################")
