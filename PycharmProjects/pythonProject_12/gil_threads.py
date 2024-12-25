@@ -25,14 +25,12 @@ def io_threading():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-u", "--url", dest="mock_server_url",
-                        help="Mock Server URL",
-                        default="http://stats-qa-03:8888")
-    parser.add_argument("-o", "--order_id", dest="order_id",
-                        help="Order Id",
-                        default="81b0314a-9e90-4657-bed6-b00aa3468007")
+    parser.add_argument("-j", "--jobnumber", dest="jnumber",
+                        help="HPC sbatch number",
+                        default="-1")
 
-    #args = parser.parse_args()
+    args = parser.parse_args()
+    print("job started with number " + args.jnumber)
 
     th1 = threading.Thread(target=cpu_threading)
     th2 = threading.Thread(target=io_threading)
