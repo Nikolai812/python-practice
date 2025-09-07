@@ -1,0 +1,46 @@
+<input class="input" aria-describedby="description" aria-invalid="false" aria-label="jobname" placeholder="Insert text here" type="text">
+
+
+<input class="input" aria-describedby="description" aria-invalid="false" aria-label="query_sequence" placeholder="Insert text here" type="text">
+
+
+
+
+
+
+//div[@class='inputarea-and-title']//colab-form//div[@class='widget-area vertical layout']  - works
+
+
+(//div[@class='widget-area vertical layout'])[1]
+
+(//div[@class='widget-area vertical layout'])[1]//div[@class='layout horizontal grow']   works
+
+((//div[@class='widget-area vertical layout'])[1]//div[@class='layout horizontal grow'])[1]
+
+
+
+
+???
+
+<div class="layout horizontal grow">
+      <!--?lit$406871446$--> <div class="formview-stringquotes">"</div>
+      <md-outlined-text-field class="flex" placeholder="Insert text here" value="PIAQIHILEGRSDEQKETLIREVSEAISRSLDAPLTSVRVIITEMAKGHFGIGGELASK" data-aria-label="query_sequence" inputmode="" type="text" autocomplete="">
+      </md-outlined-text-field>
+      <!--?lit$406871446$--> <div class="formview-stringquotes">"</div>
+    </div>
+
+
+
+<md-outlined-text-field class="flex" placeholder="Insert text here" value="test" data-aria-label="jobname" inputmode="" type="text" autocomplete="">
+      </md-outlined-text-field>
+
+
+<div class="goog-menu-button goog-inline-block" id="runtime-menu-button" role="button" aria-expanded="false" aria-haspopup="true" style="user-select: none;"><div class="goog-inline-block goog-menu-button-outer-box" style="user-select: none;"><div class="goog-inline-block goog-menu-button-inner-box" style="user-select: none;"><div class="goog-inline-block goog-menu-button-caption" style="user-select: none;"><!--?lit$406871446$-->Runtime</div><div class="goog-inline-block goog-menu-button-dropdown" style="user-select: none;">&nbsp;</div></div></div></div>
+
+
+<div class="goog-menuitem-content" style="user-select: none;"><!--?lit$406871446$-->Run all<!--?lit$406871446$--><span class="goog-menuitem-accel">Ctrl+F9</span></div>
+
+
+
+
+<div class="goog-menu colab-styled-scroller" id="runtime-menu" role="menu" aria-haspopup="true" style="user-select: none; max-height: 1150px; visibility: visible; left: 249.781px; top: 62px; display: none;"><!--?lit$177640429$--><div command="runall" class="goog-menuitem" role="menuitem" id=":1v" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Run all<!--?lit$177640429$--><span class="goog-menuitem-accel">Ctrl+F9</span></div></div><div command="runbefore" class="goog-menuitem" role="menuitem" id=":1w" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Run before<!--?lit$177640429$--><span class="goog-menuitem-accel">Ctrl+F8</span></div></div><div command="runfocused" class="goog-menuitem" role="menuitem" id=":1x" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Run the focused cell<!--?lit$177640429$--><span class="goog-menuitem-accel">Ctrl+Enter</span></div></div><div command="runselected" class="goog-menuitem" role="menuitem" id=":1y" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Run selection<!--?lit$177640429$--><span class="goog-menuitem-accel">Ctrl+Shift+Enter</span></div></div><div command="runafter" class="goog-menuitem" role="menuitem" id=":1z" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Run cell and below<!--?lit$177640429$--><span class="goog-menuitem-accel">Ctrl+F10</span></div></div><div class="goog-menuseparator goog-menuitem-disabled" aria-disabled="true" role="separator" id=":20" style="user-select: none;"></div><div command="interrupt" class="goog-menuitem goog-menuitem-disabled" role="menuitem" id=":21" aria-disabled="true" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Interrupt execution<!--?lit$177640429$--><span class="goog-menuitem-accel">Ctrl+M I</span></div></div><div command="restart" class="goog-menuitem goog-menuitem-disabled" role="menuitem" id=":22" aria-disabled="true" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Restart session<!--?lit$177640429$--><span class="goog-menuitem-accel">Ctrl+M .</span></div></div><div command="restart-and-run-all" class="goog-menuitem goog-menuitem-disabled" role="menuitem" id=":23" aria-disabled="true" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Restart session and run all<!--?lit$177640429$--></div></div><div command="powerwash-current-vm" class="goog-menuitem goog-menuitem-disabled" role="menuitem" id=":24" aria-disabled="true" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Disconnect and delete runtime<!--?lit$177640429$--></div></div><div class="goog-menuseparator goog-menuitem-disabled" aria-disabled="true" role="separator" id=":25" style="user-select: none;"></div><div command="change-runtime-type" class=" goog-menuitem " role="menuitem" id=":26" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Change runtime type<!--?lit$177640429$--></div></div><div class="goog-menuseparator goog-menuitem-disabled" aria-disabled="true" role="separator" id=":27" style="user-select: none;"></div><div command="manage-sessions" class=" goog-menuitem " role="menuitem" id=":28" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->Manage sessions<!--?lit$177640429$--></div></div><div command="open-resource-viewer" class=" goog-menuitem " role="menuitem" id=":29" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->View resources<!--?lit$177640429$--></div></div><div command="view-runtime-logs" class="goog-menuitem goog-menuitem-disabled" role="menuitem" id=":2a" aria-disabled="true" style="user-select: none;"><div class="goog-menuitem-content" style="user-select: none;"><!--?lit$177640429$-->View runtime logs<!--?lit$177640429$--></div></div></div>
