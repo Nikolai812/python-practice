@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 
 @contextmanager
-def power_gen(exponent):
+def power_manager(exponent):
     print("Powering on with exponent {}".format(exponent))
     def get_power(i):
         return i ** exponent
@@ -12,13 +12,13 @@ def power_gen(exponent):
 if __name__ == '__main__':
     print("main started")
 
-    with power_gen(3) as gen:
+    with power_manager(3) as cube:
         print("Inside gen")
-        res = gen(2)
+        res = cube(2)
         print(res)
-        res= gen(3)
+        res= cube(3)
         print(res)
-        res = gen(4)
+        res = cube(4)
         print(res)
 
 
