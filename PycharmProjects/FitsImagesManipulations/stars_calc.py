@@ -41,7 +41,13 @@ def get_star_sources(
 
 if __name__ == "__main__":
     import os
-    # import pandas as pd
+
+    # The lists below collect the .fts file names with zero number of stars for threshold_factor=5,
+    # zero number of stars for threshold_factor=10, but non_zero for threshold_factor=5,
+    # non_zero number of stars woth
+    zero_stars_th5 = []
+    zero_stars_only_th10 = []
+    non_zero_stars = []
 
     fts_dir = "FTS"  # Directory containing .fts files
     fwhm=3.0
@@ -52,21 +58,39 @@ if __name__ == "__main__":
             print("")
             print("####################################")
             print(fts_file)
-            sources = get_star_sources(
+
+            threshold_factor = 5.0
+            sources_5th = get_star_sources(
                 fits_image_path=fts_file,
                 fwhm=fwhm,
                 threshold_factor=threshold_factor
             )
 
+            threshold_factor = 10.0
+            sources_10th = get_star_sources(
+                fits_image_path=fts_file,
+                fwhm=fwhm,
+                threshold_factor=threshold_factor
+            )
 
+            num_stars_5th = 0 if sources_5th is None else len(sources_5th)
+            print(f"Detected {num_stars_5th} stars for threshold: {threshold_factor}, fwhm: {fwhm}")
 
-            num_stars = 0 if sources is None else len(sources)
-            print(f"Detected {num_stars} stars")
+            num_stars_10th = 0 if sources_10th is None else len(sources_10th)
+            print(f"Detected {num_stars_10th} stars for threshold: {threshold_factor}")
 
-            if num_stars > 0:
-                df = sources.to_pandas()
+            if num_stars_10th > 0:
+                non_zero_stars.append(fts_file)
+            elif num_stars_5th > 0:
+                zero_stars_only_th10.append(fts_file)
+                df = sources_5th.to_pandas()
                 brightest = df.sort_values("flux", ascending=False)
                 print(brightest.head(10))
+            else:
+                zero_stars_th5.append(fts_file)
 
             print("####################################")
 
+        print("non zero stars:", non_zero_stars)
+        print("zero stars only th10:", zero_stars_only_th10)
+        print("zero stars th5:", zero_stars_th5)
