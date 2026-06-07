@@ -2,6 +2,44 @@ from astropy.io import fits
 from astropy.stats import sigma_clipped_stats
 from photutils.detection import DAOStarFinder
 
+from dataclasses import dataclass
+from configparser import ConfigParser
+
+
+@dataclass
+class FTSConfig:
+    fts_input: list[str]
+    fts_classified: list[str]
+    fwhm: float
+    low_threshold: float
+    high_threshold: float
+    dry_run: bool
+
+
+def read_config(filename="fts_config.ini") -> FTSConfig:
+    parser = ConfigParser()
+    parser.read(filename)
+
+    cfg = parser["DEFAULT"]
+
+    return FTSConfig(
+        fts_input=[
+            s.strip()
+            for s in cfg.get("fts_input", "").split(",")
+            if s.strip()
+        ],
+        fts_classified=[
+            s.strip()
+            for s in cfg.get("fts_classified", "").split(",")
+            if s.strip()
+        ],
+        fwhm=cfg.getfloat("fwhm", 3.0),
+        low_threshold=cfg.getfloat("low_threshold", 5.0),
+        high_threshold=cfg.getfloat("high_threshold", 10.0),
+        dry_run=cfg.getboolean("dry_run", True),
+    )
+
+
 
 def get_star_sources(
     fits_image_path: str,
