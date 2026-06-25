@@ -4,6 +4,7 @@ from photutils.detection import DAOStarFinder
 
 from dataclasses import dataclass
 from configparser import ConfigParser
+from pathlib import Path
 
 
 @dataclass
@@ -16,7 +17,7 @@ class FTSConfig:
     dry_run: bool
 
 
-def read_config(filename="fts_config.ini") -> FTSConfig:
+def read_config(filename: str = "fts_config.ini") -> FTSConfig:
     parser = ConfigParser()
     parser.read(filename)
 
@@ -40,95 +41,110 @@ def read_config(filename="fts_config.ini") -> FTSConfig:
     )
 
 
-
 def get_star_sources(
     fits_image_path: str,
     fwhm: float = 3.0,
-    threshold_factor: float = 5.0
+    threshold_factor: float = 5.0,
 ):
-    """
-    Detect star-like sources in a FITS image.
-
-    Parameters
-    ----------
-    fits_image_path : str
-        Path to the FITS (.fts/.fits) image.
-    fwhm : float, optional
-        Approximate full width at half maximum of stars in pixels.
-    threshold_factor : float, optional
-        Detection threshold in units of background sigma.
-
-    Returns
-    -------
-    astropy.table.Table or None
-        Table of detected sources.
-    """
     data = fits.getdata(fits_image_path)
 
     mean, median, std = sigma_clipped_stats(data)
 
     daofind = DAOStarFinder(
         fwhm=fwhm,
-        threshold=threshold_factor * std
+        threshold=threshold_factor * std,
     )
 
-    sources = daofind(data - median)
-
-    return sources
+    return daofind(data - median)
 
 
-if __name__ == "__main__":
-    import os
+def process_fts_file(
+    fts_file: Path,
+    config: FTSConfig,
+    zero_stars_th5: list[str],
+    zero_stars_only_th10: list[str],
+    non_zero_stars: list[str],
+) -> None:
 
-    # The lists below collect the .fts file names with zero number of stars for threshold_factor=5,
-    # zero number of stars for threshold_factor=10, but non_zero for threshold_factor=5,
-    # non_zero number of stars woth
+    print()
+    print("####################################")
+    print(fts_file)
+
+    sources_low = get_star_sources(
+        fits_image_path=str(fts_file),
+        fwhm=config.fwhm,
+        threshold_factor=config.low_threshold,
+    )
+
+    sources_high = get_star_sources(
+        fits_image_path=str(fts_file),
+        fwhm=config.fwhm,
+        threshold_factor=config.high_threshold,
+    )
+
+    num_stars_low = 0 if sources_low is None else len(sources_low)
+    num_stars_high = 0 if sources_high is None else len(sources_high)
+
+    print(
+        f"Detected {num_stars_low} stars "
+        f"for threshold={config.low_threshold}, "
+        f"fwhm={config.fwhm}"
+    )
+
+    print(
+        f"Detected {num_stars_high} stars "
+        f"for threshold={config.high_threshold}, "
+        f"fwhm={config.fwhm}"
+    )
+
+    if num_stars_high > 0:
+        non_zero_stars.append(str(fts_file))
+
+    elif num_stars_low > 0:
+        zero_stars_only_th10.append(str(fts_file))
+
+        df = sources_low.to_pandas()
+        brightest = df.sort_values("flux", ascending=False)
+
+        print("Top 10 brightest sources:")
+        print(brightest.head(10))
+
+    else:
+        zero_stars_th5.append(str(fts_file))
+
+    print("####################################")
+
+
+def main() -> None:
+    config = read_config()
+
     zero_stars_th5 = []
     zero_stars_only_th10 = []
     non_zero_stars = []
 
-    fts_dir = "FTS"  # Directory containing .fts files
-    fwhm=3.0
-    threshold_factor=5.0 # typical default -5
-    for filename in os.listdir(fts_dir):
-        if filename.endswith(".fts"):
-            fts_file = os.path.join(fts_dir, filename)
-            print("")
-            print("####################################")
-            print(fts_file)
+    for input_dir in config.fts_input:
 
-            threshold_factor = 5.0
-            sources_5th = get_star_sources(
-                fits_image_path=fts_file,
-                fwhm=fwhm,
-                threshold_factor=threshold_factor
+        fts_dir = Path(input_dir)
+
+        if not fts_dir.exists():
+            print(f"Directory does not exist: {fts_dir}")
+            continue
+
+        for fts_file in sorted(fts_dir.glob("*.fts")):
+            process_fts_file(
+                fts_file=fts_file,
+                config=config,
+                zero_stars_th5=zero_stars_th5,
+                zero_stars_only_th10=zero_stars_only_th10,
+                non_zero_stars=non_zero_stars,
             )
 
-            threshold_factor = 10.0
-            sources_10th = get_star_sources(
-                fits_image_path=fts_file,
-                fwhm=fwhm,
-                threshold_factor=threshold_factor
-            )
+    print()
+    print("========== SUMMARY ==========")
+    print("non zero stars:", non_zero_stars)
+    print("zero stars only high threshold:", zero_stars_only_th10)
+    print("zero stars low threshold:", zero_stars_th5)
 
-            num_stars_5th = 0 if sources_5th is None else len(sources_5th)
-            print(f"Detected {num_stars_5th} stars for threshold: {threshold_factor}, fwhm: {fwhm}")
 
-            num_stars_10th = 0 if sources_10th is None else len(sources_10th)
-            print(f"Detected {num_stars_10th} stars for threshold: {threshold_factor}")
-
-            if num_stars_10th > 0:
-                non_zero_stars.append(fts_file)
-            elif num_stars_5th > 0:
-                zero_stars_only_th10.append(fts_file)
-                df = sources_5th.to_pandas()
-                brightest = df.sort_values("flux", ascending=False)
-                print(brightest.head(10))
-            else:
-                zero_stars_th5.append(fts_file)
-
-            print("####################################")
-
-        print("non zero stars:", non_zero_stars)
-        print("zero stars only th10:", zero_stars_only_th10)
-        print("zero stars th5:", zero_stars_th5)
+if __name__ == "__main__":
+    main()
