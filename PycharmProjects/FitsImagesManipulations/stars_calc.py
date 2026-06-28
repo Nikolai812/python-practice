@@ -9,7 +9,7 @@ from pathlib import Path
 
 @dataclass
 class FTSConfig:
-    fts_input: list[str]
+    fts_input: str
     fts_classified: list[str]
     fwhm: float
     low_threshold: float
@@ -24,11 +24,7 @@ def read_config(filename: str = "fts_config.ini") -> FTSConfig:
     cfg = parser["DEFAULT"]
 
     return FTSConfig(
-        fts_input=[
-            s.strip()
-            for s in cfg.get("fts_input", "").split(",")
-            if s.strip()
-        ],
+        fts_input=cfg.get("fts_input", "FTS").strip(),
         fts_classified=[
             s.strip()
             for s in cfg.get("fts_classified", "").split(",")
@@ -38,6 +34,22 @@ def read_config(filename: str = "fts_config.ini") -> FTSConfig:
         low_threshold=cfg.getfloat("low_threshold", 5.0),
         high_threshold=cfg.getfloat("high_threshold", 10.0),
         dry_run=cfg.getboolean("dry_run", True),
+    )
+
+
+def get_input_directories(root_dir: str) -> list[Path]:
+    """
+    Return all first-level subdirectories of the configured FTS root.
+    """
+    root = Path(root_dir)
+
+    if not root.exists():
+        raise FileNotFoundError(root)
+
+    return sorted(
+        directory
+        for directory in root.iterdir()
+        if directory.is_dir()
     )
 
 
@@ -122,13 +134,8 @@ def main() -> None:
     zero_stars_only_th10 = []
     non_zero_stars = []
 
-    for input_dir in config.fts_input:
-
-        fts_dir = Path(input_dir)
-
-        if not fts_dir.exists():
-            print(f"Directory does not exist: {fts_dir}")
-            continue
+    for fts_dir in get_input_directories(config.fts_input):
+        print(f"\nProcessing {fts_dir}")
 
         for fts_file in sorted(fts_dir.glob("*.fts")):
             process_fts_file(
@@ -139,6 +146,7 @@ def main() -> None:
                 non_zero_stars=non_zero_stars,
             )
 
+    
     print()
     print("========== SUMMARY ==========")
     print("non zero stars:", non_zero_stars)
