@@ -5,6 +5,7 @@ from photutils.detection import DAOStarFinder
 from dataclasses import dataclass
 from configparser import ConfigParser
 from pathlib import Path
+import shutil
 
 
 @dataclass
@@ -68,6 +69,49 @@ def get_star_sources(
     )
 
     return daofind(data - median)
+
+def copy_classified_files(config: FTSConfig,
+                          non_zero_stars: list[str],
+                          zero_stars_only_th10: list[str],
+                          zero_stars_th5: list[str]) -> None:
+    """
+    Copy classified FITS files into the configured output directories.
+    """
+
+    if len(config.fts_classified) < 3:
+        raise ValueError(
+            "fts_classified must contain exactly three directories."
+        )
+
+    destinations = [
+        Path(config.fts_classified[0]),
+        Path(config.fts_classified[1]),
+        Path(config.fts_classified[2]),
+    ]
+
+    #
+    # Create destination directories if they do not exist.
+    #
+    for dst in destinations:
+        dst.mkdir(parents=True, exist_ok=True)
+
+    classifications = [
+        (non_zero_stars, destinations[0], "BRIGHT_STARS"),
+        (zero_stars_only_th10, destinations[1], "DIM_STARS"),
+        (zero_stars_th5, destinations[2], "NO_STARS"),
+    ]
+
+    for files, destination, label in classifications:
+        for filename in files:
+            src = Path(filename)
+            dst = destination / src.name
+
+            shutil.copy2(src, dst)
+
+            print(
+                f"[COPY] {label:<12} : "
+                f"{src} -> {dst}"
+            )
 
 
 def process_fts_file(
@@ -146,12 +190,23 @@ def main() -> None:
                 non_zero_stars=non_zero_stars,
             )
 
-    
+
     print()
     print("========== SUMMARY ==========")
     print("non zero stars:", non_zero_stars)
     print("zero stars only high threshold:", zero_stars_only_th10)
     print("zero stars low threshold:", zero_stars_th5)
+
+    if config.dry_run:
+        print("\nDry run enabled: no files copied.")
+    else:
+        print("\nCopying classified FITS files...")
+        copy_classified_files(
+            config,
+            non_zero_stars,
+            zero_stars_only_th10,
+            zero_stars_th5,
+        )
 
 
 if __name__ == "__main__":
